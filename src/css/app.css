@@ -1,0 +1,2 @@
+/* Efficient frontier styles */
+.ef-wrap { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }

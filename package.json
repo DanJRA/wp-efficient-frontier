@@ -1,0 +1,16 @@
+{
+  "name": "wp-efficient-frontier",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node esbuild.config.mjs --watch",
+    "build": "node esbuild.config.mjs"
+  },
+  "dependencies": {
+    "papaparse": "^5.4.1",
+    "d3": "^7.9.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0"
+  }
+}

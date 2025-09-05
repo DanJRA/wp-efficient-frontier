@@ -1,2 +1,9 @@
 # wp-efficient-frontier
-Efficient Frontier tool for a web app
+
+Web version of efficient frontier visualization.
+
+## Build
+```bash
+npm install
+npm run build
+```
