@@ -13,6 +13,17 @@ jobs:
           node-version: '20'
       - run: npm ci || npm i
       - run: npm run build
+      - run: |
+          echo "--- repo root ---"
+          ls -la
+          echo "--- src/ ---"
+          ls -la src || true
+          echo "--- src/js ---"
+          ls -la src/js || true
+          echo "--- src/css ---"
+          ls -la src/css || true
+          echo "--- dist/ ---"
+          ls -la dist || true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
