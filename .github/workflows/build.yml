@@ -13,17 +13,25 @@ jobs:
           node-version: '20'
       - run: npm ci || npm i
       - run: npm run build
-      - run: |
-          echo "--- repo root ---"
-          ls -la
-          echo "--- src/ ---"
-          ls -la src || true
-          echo "--- src/js ---"
-          ls -la src/js || true
-          echo "--- src/css ---"
-          ls -la src/css || true
-          echo "--- dist/ ---"
-          ls -la dist || true
+      # 👇 list what exists so we can see filenames in the logs
+      - name: Show dist contents
+        run: |
+          echo "--- repo root ---"; ls -la
+          echo "--- src/js ---"; ls -la src/js || true
+          echo "--- src/css ---"; ls -la src/css || true
+          echo "--- dist ---"; ls -la dist || true
+      # (optional) add a tiny index.html so the site root loads
+      - name: Add index.html
+        run: |
+          cat > dist/index.html << 'HTML'
+          <!doctype html><meta charset="utf-8">
+          <title>Assets check</title>
+          <h1>Assets check</h1>
+          <ul>
+            <li><a href="./app.css">app.css</a></li>
+            <li><a href="./app.js">app.js</a></li>
+          </ul>
+          HTML
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
