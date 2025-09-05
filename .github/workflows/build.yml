@@ -2,20 +2,28 @@ name: Build & Publish
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with:
+          node-version: '20'
       - run: npm ci || npm i
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
-        with: { path: dist }
+        with:
+          path: dist
+
   deploy:
     needs: build
-    permissions: { pages: write, id-token: write }
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
     runs-on: ubuntu-latest
     steps:
       - id: deployment
