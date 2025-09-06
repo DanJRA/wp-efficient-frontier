@@ -1,8 +1,11 @@
 import * as d3 from "d3";
 import Papa from "papaparse";
 
-
-const DATA_BASE = new URL("../data", document.currentScript.src).href;
+// Locate the CSV sample data relative to the compiled script. When bundled by
+// esbuild the runtime file lives at `dist/js/app.js` while the CSV files remain
+// in `data/` at the project root. We therefore need to traverse two directories
+// up from the script location to resolve the correct path.
+const DATA_BASE = new URL("../../data", document.currentScript.src).href;
 
 async function fetchCsv(path) {
   const res = await fetch(path);
