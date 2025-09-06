@@ -22,7 +22,6 @@ async function loadStaticData() {
   const meanReturns = retRows.slice(1).map(r => Number(r[1]));
   const vols = volRows.slice(1).map(r => Number(r[1]));
   const corr = corrRows.slice(1).map(row => row.slice(1).map(Number));
-  console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
   return { assets, meanReturns, vols, corr };
 }
 
@@ -140,6 +139,7 @@ function setup() {
 
   runBtn.addEventListener("click", async () => {
     const { assets, meanReturns, vols, corr } = await loadStaticData();
+    console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
     state.assets = assets;
     state.meanReturns = meanReturns;
     state.vols = vols;
