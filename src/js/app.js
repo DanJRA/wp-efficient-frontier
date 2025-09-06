@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import Papa from "papaparse";
 
+
 const DATA_BASE = new URL("../data", document.currentScript.src).href;
 
 async function fetchCsv(path) {
