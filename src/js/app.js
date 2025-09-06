@@ -4,11 +4,11 @@ import Papa from "papaparse";
 // Static CSV files hosted in the WordPress media library.
 const DATA_URLS = {
   returns:
-    "data/Asset_Returns.csv",
+    returns: new URL('../data/Asset_Returns.csv', import.meta.url),
   vols:
-    "data/Asset_Volatilities.csv",
+    returns: new URL('../data/Asset_Volatilities.csv', import.meta.url),
   corr:
-    "data/Asset_Correlations.csv",
+    returns: new URL('../data/Asset_Correlations.csv', import.meta.url),
 };
 
 async function fetchCsv(path) {
