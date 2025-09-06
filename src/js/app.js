@@ -1,14 +1,12 @@
 import * as d3 from "d3";
 import Papa from "papaparse";
 
-// Static CSV files hosted in the WordPress media library.
+// Static CSV files hosted alongside this bundle.
 const DATA_URLS = {
-  returns: new URL('../data/Asset_Returns.csv', import.meta.url).href,
-  vols:    new URL('../data/Asset_Volatilities.csv', import.meta.url).href,
-  corr:    new URL('../data/Asset_Correlations.csv', import.meta.url).href,
+  returns: new URL("../data/Asset_Returns.csv", import.meta.url).href,
+  vols:    new URL("../data/Asset_Volatilities.csv", import.meta.url).href,
+  corr:    new URL("../data/Asset_Correlations.csv", import.meta.url).href,
 };
-
-
 
 async function fetchCsv(path) {
   const res = await fetch(path);
@@ -25,10 +23,10 @@ async function loadStaticData() {
     fetchCsv(DATA_URLS.corr),
   ]);
 
-  const assets = retRows.slice(1).map(r => String(r[0]));
+  const assets      = retRows.slice(1).map(r => String(r[0]));
   const meanReturns = retRows.slice(1).map(r => Number(r[1]));
-  const vols = volRows.slice(1).map(r => Number(r[1]));
-  const corr = corrRows.slice(1).map(row => row.slice(1).map(Number));
+  const vols        = volRows.slice(1).map(r => Number(r[1]));
+  const corr        = corrRows.slice(1).map(row => row.slice(1).map(Number));
   console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
   return { assets, meanReturns, vols, corr };
 }
