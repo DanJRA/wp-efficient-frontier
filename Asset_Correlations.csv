@@ -1,0 +1,7 @@
+﻿,UK Cash,Global Credit hedged,World Government Bonds,AC World Equity,Global REITs,Diversified Hedge Funds hedged
+UK Cash,1,0.08,0.22,-0.07,-0.12,-0.12
+Global Credit hedged,0.08,1,0.22,0.47,0.53,0.33
+World Government Bonds,0.22,0.22,1,0.03,0.12,-0.44
+AC World Equity,-0.07,0.47,0.03,1,0.84,0.61
+Global REITs,-0.12,0.53,0.12,0.84,1,0.43
+Diversified Hedge Funds hedged,-0.12,0.33,-0.44,0.61,0.43,1
