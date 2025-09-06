@@ -1,10 +1,34 @@
-// test edit
 import * as d3 from "d3";
 import Papa from "papaparse";
 
+const DATA_BASE = "../../data";
+
+async function fetchCsv(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+  const text = await res.text();
+  const parsed = Papa.parse(text, { header: false, dynamicTyping: true });
+  return parsed.data;
+}
+
+async function loadStaticData() {
+  const [retRows, volRows, corrRows] = await Promise.all([
+    fetchCsv(`${DATA_BASE}/Asset_Returns.csv`),
+    fetchCsv(`${DATA_BASE}/Asset_Volatilities.csv`),
+    fetchCsv(`${DATA_BASE}/Asset_Correlations.csv`),
+  ]);
+
+  const assets = retRows.slice(1).map(r => String(r[0]));
+  const meanReturns = retRows.slice(1).map(r => Number(r[1]));
+  const vols = volRows.slice(1).map(r => Number(r[1]));
+  const corr = corrRows.slice(1).map(row => row.slice(1).map(Number));
+  console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
+  return { assets, meanReturns, vols, corr };
+}
+
 /**
  * Web MVP of your PyQt5 app:
- * - Upload three CSVs: Asset_Returns.csv, Asset_Volatilities.csv, Asset_Correlations.csv
+ * - Uses built-in CSVs: Asset_Returns.csv, Asset_Volatilities.csv, Asset_Correlations.csv
  * - Compute random portfolios (approximate frontier), MVP, Max-Sharpe
  * - Add user portfolio by weights and custom R/V points
  * - Draw interactive scatter + frontier line
@@ -89,29 +113,12 @@ function qs(sel){ return document.querySelector(sel); }
 
 function setup() {
   // wire inputs
-  const returnsInput = qs("#ef-returns");
-  const volsInput = qs("#ef-vols");
-  const corrInput = qs("#ef-corr");
-  const rfInput = qs("#ef-rf");
-  const simsInput = qs("#ef-sims");
   const runBtn = qs("#ef-run");
   const eqBtn = qs("#ef-eq");
   const addWeightsBtn = qs("#ef-add-weights");
   const clearWeightsBtn = qs("#ef-clear-weights");
   const addRVBtn = qs("#ef-add-rv");
   const clearRVBtn = qs("#ef-clear-rv");
-
-  // parse CSVs
-  function parseCsv(file) {
-    return new Promise((resolve, reject) => {
-      Papa.parse(file, {
-        header: false,
-        dynamicTyping: true,
-        complete: (res) => resolve(res.data),
-        error: reject
-      });
-    });
-  }
 
   // Equal-weight helper
   eqBtn.addEventListener("click", () => {
@@ -132,39 +139,16 @@ function setup() {
   });
 
   runBtn.addEventListener("click", async () => {
-    if (!returnsInput.files[0] || !volsInput.files[0] || !corrInput.files[0]) {
-      alert("Please select all three CSVs first.");
-      return;
-    }
-    // Load data
-    const [retRows, volRows, corrRows] = await Promise.all([
-      parseCsv(returnsInput.files[0]),
-      parseCsv(volsInput.files[0]),
-      parseCsv(corrInput.files[0])
-    ]);
-
-    // Expect: first column = Asset Name, second column = value
-    const assets = retRows.slice(1).map(r => String(r[0]));
-    const meanReturns = retRows.slice(1).map(r => Number(r[1])); // already decimals in your CSV
-    const vols = volRows.slice(1).map(r => Number(r[1]));        // decimals
-    // Correlations: square matrix with header row/col
-    const corr = corrRows.slice(1).map(row => row.slice(1).map(Number));
-
-    // Basic validation like the Py app
-    if (assets.length !== vols.length || corr.length !== assets.length) {
-      alert("Assets / Vols / Corr dimensions don’t match.");
-      return;
-    }
-
+    const { assets, meanReturns, vols, corr } = await loadStaticData();
     state.assets = assets;
     state.meanReturns = meanReturns;
     state.vols = vols;
     state.corr = corr;
     state.cov = computeCov(vols, corr);
-    state.rf = clamp(Number(rfInput.value) / 100, 0, 1);
-    const sims = clamp(parseInt(simsInput.value || "50000", 10), 1000, 200000);
+    state.rf = clamp(Number(qs("#ef-rf").value) / 100, 0, 1);
+    const sims = clamp(parseInt(qs("#ef-sims").value || "50000", 10), 1000, 200000);
 
-    // Generate random portfolios
+    // generate cloud exactly as before...
     const cloud = [];
     for (let i = 0; i < sims; i++) {
       let w = Array.from({ length: assets.length }, () => Math.random());
@@ -176,9 +160,8 @@ function setup() {
     }
     state.cloud = cloud;
 
-    draw(); // initial chart
-    // Build dynamic weight inputs (if not present)
-    if (!qs("#ef-weights input")) eqBtn.click();
+    draw();
+    if (!qs("#ef-weights input")) qs("#ef-eq").click();
   });
 
   addWeightsBtn.addEventListener("click", () => {
