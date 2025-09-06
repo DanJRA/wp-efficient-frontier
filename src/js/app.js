@@ -1,7 +1,8 @@
 import * as d3 from "d3";
 import Papa from "papaparse";
 
-const DATA_BASE = "../../data";
+
+const DATA_BASE = new URL("../data", document.currentScript.src).href;
 
 async function fetchCsv(path) {
   const res = await fetch(path);
@@ -22,6 +23,7 @@ async function loadStaticData() {
   const meanReturns = retRows.slice(1).map(r => Number(r[1]));
   const vols = volRows.slice(1).map(r => Number(r[1]));
   const corr = corrRows.slice(1).map(row => row.slice(1).map(Number));
+  console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
   return { assets, meanReturns, vols, corr };
 }
 
@@ -138,30 +140,34 @@ function setup() {
   });
 
   runBtn.addEventListener("click", async () => {
-    const { assets, meanReturns, vols, corr } = await loadStaticData();
-    console.log("Loaded data:", assets.length, meanReturns.length, vols.length, corr.length);
-    state.assets = assets;
-    state.meanReturns = meanReturns;
-    state.vols = vols;
-    state.corr = corr;
-    state.cov = computeCov(vols, corr);
-    state.rf = clamp(Number(qs("#ef-rf").value) / 100, 0, 1);
-    const sims = clamp(parseInt(qs("#ef-sims").value || "50000", 10), 1000, 200000);
+    try {
+      const { assets, meanReturns, vols, corr } = await loadStaticData();
+      state.assets = assets;
+      state.meanReturns = meanReturns;
+      state.vols = vols;
+      state.corr = corr;
+      state.cov = computeCov(vols, corr);
+      state.rf = clamp(Number(qs("#ef-rf").value) / 100, 0, 1);
+      const sims = clamp(parseInt(qs("#ef-sims").value || "50000", 10), 1000, 200000);
 
-    // generate cloud exactly as before...
-    const cloud = [];
-    for (let i = 0; i < sims; i++) {
-      let w = Array.from({ length: assets.length }, () => Math.random());
-      w = normalizeWeights(w);
-      const ret = dot(w, meanReturns);
-      const vol = portfolioVol(w, state.cov);
-      const sharpe = (ret - state.rf) / vol;
-      cloud.push({ ret, vol, sharpe, w });
+      // generate cloud exactly as before...
+      const cloud = [];
+      for (let i = 0; i < sims; i++) {
+        let w = Array.from({ length: assets.length }, () => Math.random());
+        w = normalizeWeights(w);
+        const ret = dot(w, meanReturns);
+        const vol = portfolioVol(w, state.cov);
+        const sharpe = (ret - state.rf) / vol;
+        cloud.push({ ret, vol, sharpe, w });
+      }
+      state.cloud = cloud;
+
+      draw();
+      if (!qs("#ef-weights input")) qs("#ef-eq").click();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load sample data");
     }
-    state.cloud = cloud;
-
-    draw();
-    if (!qs("#ef-weights input")) qs("#ef-eq").click();
   });
 
   addWeightsBtn.addEventListener("click", () => {
