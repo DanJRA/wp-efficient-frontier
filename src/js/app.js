@@ -1,19 +1,15 @@
 import * as d3 from "d3";
 import Papa from "papaparse";
 
-// Locate the CSV sample data relative to the compiled script. When bundled by
-// esbuild the runtime file may live at `dist/js/app.js` while the CSV files
-// remain in `data/` at the project root. When embedded directly the script is
-// typically served from `/js/app.js`. Detect the former case and adjust the
-// directory traversal accordingly so the data folder resolves correctly in both
-// scenarios.
-function resolveDataBase() {
-  const src = document.currentScript?.src || "";
-  return src.includes("/dist/")
-    ? new URL("../../data", src).href
-    : new URL("../data", src).href;
-}
-const DATA_BASE = resolveDataBase();
+// Static CSV files hosted in the WordPress media library.
+const DATA_URLS = {
+  returns:
+    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Returns.csv",
+  vols:
+    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Volatilities.csv",
+  corr:
+    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Correlations.csv",
+};
 
 async function fetchCsv(path) {
   const res = await fetch(path);
@@ -25,9 +21,9 @@ async function fetchCsv(path) {
 
 async function loadStaticData() {
   const [retRows, volRows, corrRows] = await Promise.all([
-    fetchCsv(`${DATA_BASE}/Asset_Returns.csv`),
-    fetchCsv(`${DATA_BASE}/Asset_Volatilities.csv`),
-    fetchCsv(`${DATA_BASE}/Asset_Correlations.csv`),
+    fetchCsv(DATA_URLS.returns),
+    fetchCsv(DATA_URLS.vols),
+    fetchCsv(DATA_URLS.corr),
   ]);
 
   const assets = retRows.slice(1).map(r => String(r[0]));
@@ -40,7 +36,7 @@ async function loadStaticData() {
 
 /**
  * Web MVP of your PyQt5 app:
- * - Uses built-in CSVs: Asset_Returns.csv, Asset_Volatilities.csv, Asset_Correlations.csv
+ * - Loads CSVs from the WordPress media library
  * - Compute random portfolios (approximate frontier), MVP, Max-Sharpe
  * - Add user portfolio by weights and custom R/V points
  * - Draw interactive scatter + frontier line
