@@ -4,11 +4,11 @@ import Papa from "papaparse";
 // Static CSV files hosted in the WordPress media library.
 const DATA_URLS = {
   returns:
-    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Returns.csv",
+    "data/Asset_Returns.csv",
   vols:
-    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Volatilities.csv",
+    "data/Asset_Volatilities.csv",
   corr:
-    "https://capitalogic.co/wp-content/uploads/2025/09/Asset_Correlations.csv",
+    "data/Asset_Correlations.csv",
 };
 
 async function fetchCsv(path) {
