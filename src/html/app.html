@@ -1,0 +1,64 @@
+<div class="ef-wrap">
+  <div class="ef-card">
+    <h2>Risk vs. Expected Return</h2>
+    <div id="ef-chart" style="width:100%; height:520px;"></div>
+    <div class="ef-legend">
+      <span class="ef-badge">Min Variance = red dot</span>
+      <span class="ef-badge">Max Sharpe = blue dot</span>
+      <span class="ef-badge">Your Weight Points = red circles</span>
+      <span class="ef-badge">Your R/V Points = blue triangles</span>
+    </div>
+  </div>
+
+  <div class="ef-card ef-controls">
+    <h3>Inputs</h3>
+
+    <div class="row ef-upload">
+      <div><strong>Upload CSVs (same format as your desktop app)</strong></div>
+      <div style="margin-top:8px">
+        <label>Expected Returns:</label>
+        <input id="ef-returns" type="file" accept=".csv" />
+      </div>
+      <div style="margin-top:8px">
+        <label>Volatilities:</label>
+        <input id="ef-vols" type="file" accept=".csv" />
+      </div>
+      <div style="margin-top:8px">
+        <label>Correlations:</label>
+        <input id="ef-corr" type="file" accept=".csv" />
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Risk-Free Rate (%)</label>
+      <input id="ef-rf" type="number" min="0" max="100" step="0.01" value="0" />
+    </div>
+
+    <div class="row">
+      <label>Number of Simulations</label>
+      <input id="ef-sims" type="number" min="1000" max="200000" step="1000" value="50000" />
+    </div>
+
+    <button id="ef-run" class="ef-btn primary">Run Analysis</button>
+
+    <hr style="margin:14px 0" />
+
+    <h4>Add Your Portfolio (Weights)</h4>
+    <div id="ef-weights" class="row"></div>
+    <button id="ef-eq" class="ef-btn">Equal Weight Allocation</button>
+    <button id="ef-add-weights" class="ef-btn primary">Add to Chart</button>
+    <button id="ef-clear-weights" class="ef-btn">Clear</button>
+
+    <hr style="margin:14px 0" />
+
+    <h4>Add Custom Return/Volatility Point</h4>
+    <div class="row">
+      <label>Expected Return (%)</label>
+      <input id="ef-rv-ret" type="number" step="0.01" />
+      <label style="margin-top:8px">Volatility (%)</label>
+      <input id="ef-rv-vol" type="number" step="0.01" />
+    </div>
+    <button id="ef-add-rv" class="ef-btn primary">Add R/V to Chart</button>
+    <button id="ef-clear-rv" class="ef-btn">Clear R/V Points</button>
+  </div>
+</div>
