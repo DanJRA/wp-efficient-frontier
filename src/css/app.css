@@ -6,7 +6,6 @@
 .ef-controls input[type="number"] { width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; }
 .ef-btn { display:inline-block; margin-right:8px; margin-top:6px; padding:8px 12px; border-radius:10px; border:1px solid #d1d5db; background:#f9fafb; cursor:pointer; }
 .ef-btn.primary { background:#111827; color:#fff; border-color:#111827; }
-.ef-upload { border:2px dashed #cbd5e1; border-radius:12px; padding:12px; text-align:center; }
 .ef-legend { font-size:12px; color:#374151; margin-top:8px; }
 .ef-badge { display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; margin-right:8px; }
 svg text { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
