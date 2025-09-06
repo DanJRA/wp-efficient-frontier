@@ -289,4 +289,8 @@ function draw() {
   svg.append("text").attr("x", -height/2).attr("y", 15).attr("transform","rotate(-90)").attr("text-anchor","middle").text("Expected Return");
 }
 
-document.addEventListener("DOMContentLoaded", setup);
+if (document.readyState !== "loading") {
+  setup();
+} else {
+  document.addEventListener("DOMContentLoaded", setup);
+}
