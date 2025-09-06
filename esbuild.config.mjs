@@ -3,7 +3,7 @@ import { build } from "esbuild";
 
 await build({
   entryPoints: ["src/js/app.js", "src/css/app.css"],
-  outdir: "js",            // build to js/
+  outdir: "dist",            // build to js/
   bundle: true,
   minify: true,
   sourcemap: false,
